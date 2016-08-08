@@ -1,0 +1,2 @@
+start server: python -m SimpleHTTPServer
+goto: http://localhost:8000/

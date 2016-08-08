@@ -1,0 +1,30 @@
+<html><body>
+
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="lib.js"></script>
+
+
+<h1>Our tasks</h1>
+<div id='total_score'>My score: </div>
+
+<table
+    id='scores'
+    box-sizing="border-box"
+    border='1'
+    table-layout="fixed"
+>
+</table>
+
+<script>
+
+$.getJSON('data.json', function(data) {
+  renderTable(data, function(p) {
+    return p['owner'] == 137;
+  });
+});
+
+
+</script>
+
+
+</body></html>

@@ -1,0 +1,87 @@
+<html><body>
+
+
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="lib.js"></script>
+
+
+<h1><a href="our.html"> Our tasks </a></h1>
+<h1><a href="generic_queue.html?q=new_queue.txt"> New queue </a></h1>
+<h1><a href="generic_queue.html?q=approx_queue.txt"> Approx queue </a></h1>
+<h1><a href="generic_queue.html?q=approx2_queue.txt"> Approx2 queue </a></h1>
+
+
+<h2> Leaderboard: </h2>
+
+<table
+    id='leaders'
+    box-sizing="border-box"
+    border='1'
+    table-layout="fixed"
+>
+</table>
+
+
+<script>
+$.getJSON('data.json', function(data) {
+  table = $('#leaders')
+  table.append('<tr>' +
+    '<td> Number </td>' +
+    '<td> Name </td>' +
+    '<td> Id </td>' +
+    '<td> Submit score </td>' +
+    '<td> Problem score </td>' +
+    '<td> Total score </td>' +
+  '</tr>'
+  );
+
+
+  console.log(data)
+  id_to_name = {}
+  for (i in data['users']) {
+    user = data['users'][i]
+    id_to_name[ user['username'] ] = user['display_name']
+  }
+
+  by_owner = countScores(data)
+
+  LIMIT = 300
+  number = 1
+  for (i in data['leaderboard']) {
+    l = data['leaderboard'][i]
+
+    row = ''
+    row += tableCell(number)
+
+    user_id = l['username']
+    user_link = String.format(
+      '<a href="by_owner.html?owner={0}"> {1}</a>',
+      user_id,
+      id_to_name[user_id]
+    )
+
+    submit_score = 0
+    if (user_id in by_owner) {
+      submit_score = by_owner[user_id]
+    }
+    total_score = l['score']
+
+    row += tableCell(user_link)
+    row += tableCell(user_id)
+
+    row += tableCell(submit_score.toFixed(2))
+    row += tableCell((total_score - submit_score).toFixed(2))
+    row += tableCell('<b>' + total_score.toFixed(2) + '</b>')
+    table.append(tableRow(row))
+
+    number += 1
+    if (number > LIMIT) {
+      break
+    }
+  }
+})
+
+</script>
+
+
+</body></html>

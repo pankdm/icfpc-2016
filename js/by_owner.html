@@ -1,0 +1,65 @@
+<html><body>
+
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="lib.js"></script>
+
+
+
+<h1>By Owner</h1>
+<div id='owner'>owner: </div>
+<div id='total_score'></div>
+
+
+<script>
+vars = getUrlVars()
+OWNER_ID = 137
+if ('owner' in vars) {
+  OWNER_ID = vars['owner']
+}
+
+$('#owner').html('owner: ' + OWNER_ID)
+</script>
+
+
+<table
+    id='scores'
+    box-sizing="border-box"
+    border='1'
+    table-layout="fixed"
+>
+</table>
+
+<script>
+
+
+
+$.getJSON('data.json', function(data) {
+  table = $('#leaders')
+
+  LIMIT = 20
+  number = 1
+  for (i in data['leaderboard']) {
+    l = data['leaderboard'][i]
+
+    row = ''
+    row += tableCell(number)
+    row += tableCell(l['score'])
+    row += tableCell(l['username'])
+    table.append(tableRow(row))
+
+    number += 1
+    if (number > LIMIT) {
+      break
+    }
+  }
+
+  renderTable(data, function(p) {
+    return p['owner'] == OWNER_ID;
+  });
+});
+
+
+</script>
+
+
+</body></html>

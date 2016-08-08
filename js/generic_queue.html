@@ -1,0 +1,54 @@
+<html><body>
+
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="lib.js"></script>
+
+
+<h1><div id="queue_name">??</div></h1>
+<h2><div id="total_in_queue">??</div></h1>
+
+
+<table
+    id='scores'
+    box-sizing="border-box"
+    border='1'
+>
+</table>
+<script>
+
+vars = getUrlVars()
+queue_f = 'approx_queue.txt'
+if ('q' in vars) {
+  queue_f = vars['q']
+}
+$('#queue_name').html(queue_f)
+
+
+$.get(queue_f, function(text) {
+  $.getJSON('data.json', function(data) {
+    lines = text.split('\n')
+    console.log(text)
+    var dict = {};
+    var our_approx = {}
+    var list = []
+
+    for (i in lines) {
+      line = lines[i]
+      parts = line.split(' ')
+      dict[parts[0]] = parts[1]
+      our_approx[parts[0]] = parts[2]
+
+      list.push(parts[0])
+    }
+    console.log(list)
+    $('#total_in_queue').html('Total: ' + list.length)
+
+    renderTableByList(data, list, our_approx, function(p) {
+      // if (p['owner'] == 137) return false;
+      return p['problem_id'].toString() in dict;
+    });
+  })
+})
+
+</script>
+</body></html>
